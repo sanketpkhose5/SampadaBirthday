@@ -1,7 +1,7 @@
  // Reasons database
  const reasons = [
     { 
-        text: "You’re such a kind and wonderful person, and I feel lucky to share such a good bond with you. 💖", 
+        text: "You have a heart that makes people feel at home, and I feel incredibly lucky that life brought us together. The bond we share means more to me than words can express. 💖",
         emoji: "🌟",
         gif: "gif1.gif"
     },
@@ -16,7 +16,7 @@
         gif: "gif1.gif"
     },
     { 
-        text: "Stay the amazing girl you are—always spreading positivity around. Have the happiest year ahead! 🥳 ", 
+        text: "One more milestone, one more reason to shine. Congratulations on Healthium, you absolute star! 🌟💖 ",
         emoji: "🌟",
         gif: "gif2.gif"
     }

@@ -3,21 +3,572 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday</title>
+
+    <title>The Daily Times | Sampada's Birthday Special</title>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="style.css">
-    
-</head>
-<body>
-    <div class="cursor"></div>
-    <div class="container">
-        <h1>Happy Birthday Priya💗</h1>
-        <div class="greeting"></div>
-        <button class="cta-button">Click to Enter Our World 💕</button>
-    </div>
 
-    <script src="script.js">
-        
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        .screen {
+            position: fixed;
+            inset: 0;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* FIRST SCREEN: NEWSPAPER VIDEO */
+
+        #video-screen {
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #111;
+        }
+
+        #newspaper-video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .video-controls {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            gap: 10px;
+            z-index: 1001;
+        }
+
+        .intro-button {
+            padding: 12px 20px;
+            border: 1px solid #fff;
+            border-radius: 30px;
+            background: rgba(0, 0, 0, .7);
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* SECOND SCREEN: THE DAILY TIMES */
+
+        #newspaper-screen {
+            z-index: 900;
+            background: #e9dfc8;
+            padding: 24px 14px 40px;
+            font-family: Georgia, "Times New Roman", serif;
+            color: #171717;
+        }
+
+        .newspaper {
+            max-width: 950px;
+            margin: 0 auto;
+            padding: 28px;
+            background: #fffdf5;
+            border: 1px solid #c6b99c;
+            box-shadow: 0 8px 35px rgba(0, 0, 0, .16);
+        }
+
+        .newspaper-topline {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #222;
+            padding-bottom: 8px;
+            font-size: 11px;
+            letter-spacing: 1px;
+        }
+
+        .masthead {
+            text-align: center;
+            padding: 15px 0 8px;
+            border-bottom: 5px double #222;
+        }
+
+        .masthead h1 {
+            margin: 0;
+            font-size: clamp(38px, 8vw, 76px);
+            font-weight: 900;
+            letter-spacing: -3px;
+            line-height: 1;
+        }
+
+        .masthead p {
+            margin: 10px 0 0;
+            font-size: 12px;
+            letter-spacing: 3px;
+        }
+
+        .edition-label {
+            text-align: center;
+            margin: 20px 0 10px;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+
+        .breaking {
+            text-align: center;
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 5px;
+            margin: 20px 0 8px;
+        }
+
+        .main-headline {
+            text-align: center;
+            font-size: clamp(32px, 6vw, 58px);
+            font-weight: 900;
+            line-height: 1.02;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .headline-highlight {
+            background: #f6df65;
+            padding: 0 7px;
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        .main-story {
+            max-width: 680px;
+            margin: 16px auto 24px;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+
+        .newspaper-divider {
+            border: 0;
+            border-top: 3px double #222;
+            margin: 20px 0;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        .news-column {
+            padding: 16px;
+            min-width: 0;
+        }
+
+        .news-column:first-child {
+            border-right: 1px solid #777;
+        }
+
+        .section-label {
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .news-column h2 {
+            font-size: clamp(21px, 3vw, 29px);
+            line-height: 1.1;
+            text-transform: uppercase;
+            margin: 0 0 12px;
+        }
+
+        .news-column p {
+            font-size: 15px;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .funny-news {
+            margin-top: 10px;
+            padding: 20px;
+            border-top: 3px double #222;
+            border-bottom: 3px double #222;
+            text-align: center;
+        }
+
+        .funny-news h2 {
+            font-size: clamp(23px, 4vw, 35px);
+            text-transform: uppercase;
+            margin: 10px 0;
+        }
+
+        .funny-news p {
+            max-width: 680px;
+            margin: 0 auto;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .final-headline {
+            margin: 25px 0 10px;
+            padding: 20px 10px;
+            text-align: center;
+            background: #f6df65;
+            border: 2px solid #222;
+        }
+
+        .final-headline h2 {
+            margin: 0;
+            font-size: clamp(28px, 6vw, 48px);
+            line-height: 1.1;
+        }
+
+        .final-headline p {
+            margin: 12px 0 0;
+            font-size: 13px;
+            letter-spacing: 2px;
+        }
+
+        .continue-button {
+            display: block;
+            margin: 25px auto 0;
+            padding: 15px 24px;
+            border: none;
+            background: #202020;
+            color: white;
+            font-family: Arial, sans-serif;
+            font-size: 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background .2s, transform .2s;
+        }
+
+        .continue-button:hover {
+            background: #a83260;
+            transform: translateY(-2px);
+        }
+
+        .newspaper-footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #222;
+            text-align: center;
+            font-size: 10px;
+            letter-spacing: 2px;
+        }
+
+        /* THIRD SCREEN: EXISTING BIRTHDAY WEBSITE */
+
+        #birthday-screen {
+            z-index: 1;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        #birthday-screen .container {
+            /* Preserve your original stylesheet's container styling. */
+        }
+
+        @media (max-width: 600px) {
+            #newspaper-screen {
+                padding: 10px 6px 25px;
+            }
+
+            .newspaper {
+                padding: 15px 10px;
+            }
+
+            .newspaper-topline {
+                font-size: 9px;
+            }
+
+            .masthead h1 {
+                letter-spacing: -2px;
+            }
+
+            .masthead p {
+                font-size: 9px;
+                letter-spacing: 2px;
+            }
+
+            .breaking {
+                font-size: 12px;
+                letter-spacing: 3px;
+            }
+
+            .main-story {
+                font-size: 14px;
+            }
+
+            .news-column {
+                padding: 12px 8px;
+            }
+
+            .news-column h2 {
+                font-size: 19px;
+            }
+
+            .news-column p,
+            .funny-news p {
+                font-size: 13px;
+            }
+
+            .section-label {
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+
+            .funny-news {
+                padding: 15px 8px;
+            }
+
+            .final-headline p {
+                font-size: 10px;
+                letter-spacing: 1px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SCREEN 1: NEWSPAPER VIDEO -->
+
+    <section id="video-screen" class="screen">
+        <video
+            id="newspaper-video"
+            autoplay
+            muted
+            playsinline
+            preload="auto"
+        >
+            <source src="./newspaper.mp4" type="video/mp4">
+            Your browser does not support video playback.
+        </video>
+
+        <div class="video-controls">
+            <button class="intro-button" id="skip-video">
+                Continue to Newspaper ❤️
+            </button>
+        </div>
+    </section>
+
+
+    <!-- SCREEN 2: THE DAILY TIMES -->
+
+    <section id="newspaper-screen" class="screen hidden">
+
+        <article class="newspaper">
+
+            <div class="newspaper-topline">
+                <span>THE SPECIAL EDITION</span>
+                <span>A DAY WORTH CELEBRATING</span>
+            </div>
+
+            <header class="masthead">
+                <h1>THE DAILY TIMES</h1>
+                <p>TRUTH • STORIES • SPECIAL MOMENTS</p>
+            </header>
+
+            <div class="edition-label">
+                ✦ EXCLUSIVE BIRTHDAY EDITION ✦
+            </div>
+
+            <div class="breaking">
+                BREAKING NEWS!
+            </div>
+
+            <h2 class="main-headline">
+                THE DAY<br>
+                <span class="headline-highlight">SAMPADA</span><br>
+                WAS BORN
+            </h2>
+
+            <p class="main-story">
+                On this day, someone truly special entered the world.
+                Little did the world know that one day, she would become
+                someone's favourite person, bring countless smiles, and
+                create memories worth cherishing forever.
+            </p>
+
+            <hr class="newspaper-divider">
+
+            <div class="news-grid">
+
+                <!-- LEFT COLUMN -->
+
+                <section class="news-column">
+                    <div class="section-label">
+                        EXCLUSIVE ANNOUNCEMENT
+                    </div>
+
+                    <h2>
+                        The World Celebrates A Very Special Day!
+                    </h2>
+
+                    <p>
+                        Today marks Sampada's birthday! Another chapter
+                        begins in the story of a girl whose presence can
+                        make ordinary moments feel extraordinary.
+                        Celebrations are officially in order.
+                    </p>
+                </section>
+
+                <!-- RIGHT COLUMN -->
+
+                <section class="news-column">
+                    <div class="section-label">
+                        LOVE REPORT ❤️
+                    </div>
+
+                    <h2>
+                        One Girl. A Million Smiles.
+                    </h2>
+
+                    <p>
+                        Reports suggest that Sampada has a remarkable
+                        ability to make someone's day better just by
+                        being herself. Sources close to the story confirm
+                        that she is truly one of a kind.
+                    </p>
+                </section>
+
+            </div>
+
+            <!-- FUNNY NEWS -->
+
+            <section class="funny-news">
+                <div class="section-label">
+                    LATEST UPDATE • LIGHTHEARTED NEWS
+                </div>
+
+                <h2>
+                    Local Girl Accused Of Being Too Cute!
+                </h2>
+
+                <p>
+                    Witnesses report an unusual increase in smiles,
+                    random thoughts, and birthday excitement. The suspect,
+                    Sampada, remains unapologetically adorable.
+                    Authorities have no plans to stop her.
+                </p>
+            </section>
+
+            <!-- FINAL HEADLINE -->
+
+            <section class="final-headline">
+                <h2>HAPPY BIRTHDAY,<br>SAMPADA! ❤️🎂</h2>
+
+                <p>
+                    TODAY'S HEADLINE. A DAY WORTH CELEBRATING.
+                </p>
+            </section>
+
+            <div class="newspaper-footer">
+                END OF REPORT • THE DAILY TIMES
+            </div>
+
+            <button id="continue-to-birthday" class="continue-button">
+                Turn The Page To Your Surprise 💗
+            </button>
+
+        </article>
+
+    </section>
+
+
+    <!-- SCREEN 3: YOUR EXISTING BIRTHDAY WEBSITE -->
+
+    <section id="birthday-screen" class="hidden">
+
+        <div class="cursor"></div>
+
+        <div class="container">
+            <h1>Happy Birthday Sampada 💗</h1>
+
+            <div class="greeting"></div>
+
+            <button class="cta-button">
+                Click to Enter 💕
+            </button>
+        </div>
+
+    </section>
+
+
+    <!-- EXISTING JAVASCRIPT -->
+
+    <script src="script.js"></script>
+
+    <script>
+        const videoScreen = document.getElementById("video-screen");
+        const newspaperScreen = document.getElementById("newspaper-screen");
+        const birthdayScreen = document.getElementById("birthday-screen");
+        const newspaperVideo = document.getElementById("newspaper-video");
+
+        const skipVideoButton = document.getElementById("skip-video");
+        const continueButton = document.getElementById("continue-to-birthday");
+
+        let videoFinished = false;
+        let birthdayOpened = false;
+
+        function showNewspaper() {
+            if (videoFinished) return;
+
+            videoFinished = true;
+
+            newspaperVideo.pause();
+            videoScreen.classList.add("hidden");
+            newspaperScreen.classList.remove("hidden");
+
+            window.scrollTo(0, 0);
+        }
+
+        function showBirthdayWebsite() {
+            if (birthdayOpened) return;
+
+            birthdayOpened = true;
+
+            newspaperScreen.classList.add("hidden");
+            birthdayScreen.classList.remove("hidden");
+
+            window.scrollTo(0, 0);
+        }
+
+        // Automatically reveal the newspaper when the video ends.
+        newspaperVideo.addEventListener("ended", showNewspaper);
+
+        // Let the visitor skip the video.
+        skipVideoButton.addEventListener("click", showNewspaper);
+
+        // If the video fails, show the newspaper instead.
+        newspaperVideo.addEventListener("error", showNewspaper);
+
+        // Open the existing birthday experience.
+        continueButton.addEventListener("click", showBirthdayWebsite);
+
+        // Try to start the video automatically.
+        newspaperVideo.play().catch(() => {
+            // If autoplay is blocked, the visitor can continue manually.
+            skipVideoButton.textContent = "Open Birthday Newspaper ❤️";
+        });
     </script>
+
 </body>
 </html>
+```
